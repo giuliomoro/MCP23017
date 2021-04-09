@@ -1,0 +1,4 @@
+.*.sw?
+build
+settings.json
+MCP23017
