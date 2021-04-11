@@ -21,8 +21,8 @@ void processEnc()
 {
 	// we set up interrupts but don't actually use the interrupt pins.
 	mcp.setupInterrupts(true, false, MCP23017::HIGH);
-	mcp.setupInterruptPin(0, MCP23017::CHANGE);
-	mcp.setupInterruptPin(1, MCP23017::CHANGE);
+	mcp.setupInterruptPin(pins[0], MCP23017::CHANGE);
+	mcp.setupInterruptPin(pins[1], MCP23017::CHANGE);
 	while(1)
 	{
 		// we always read from INTCAP (the state of the GPIO when the
