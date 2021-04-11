@@ -38,6 +38,7 @@ public:
     void writeGPIOAB(uint16_t);
     uint16_t readGPIOAB();
     uint8_t readGPIO(uint8_t b);
+    void setRepeatedRW(bool repeated);
 
     void setupInterrupts(bool mirroring, bool open, Level polarity);
     void setupInterruptPin(uint8_t p, InterruptMode mode);

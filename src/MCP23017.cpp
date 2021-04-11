@@ -305,6 +305,25 @@ void MCP23017::pinMode(uint8_t p, Direction d) {
 	updateRegisterBit(p,(d==INPUT),MCP23017_IODIRA,MCP23017_IODIRB);
 }
 
+/*
+ * Sets the device to "byte mode" (when `repeat` is true) or "sequential mode"
+ * (when `repeat` is false). The latter is default. This features would allow
+ * to use readByte() and writeByte() to repeatedly access the same address (sec
+ * 3.2.1 of the datasheet). Unfortunately, it doesn't seem to behave as
+ * expected.
+ */
+void MCP23017::setRepeatedRW(bool repeat){
+	const unsigned int SEQOP_BIT = 5;
+	// configure the port A
+	uint8_t ioconfValue=readRegister(MCP23017_IOCONA);
+	bitWrite(ioconfValue,SEQOP_BIT,repeat);
+	writeRegister(MCP23017_IOCONA,ioconfValue);
+
+	// Configure the port B
+	ioconfValue=readRegister(MCP23017_IOCONB);
+	bitWrite(ioconfValue,SEQOP_BIT,repeat);
+	writeRegister(MCP23017_IOCONB,ioconfValue);
+}
 /**
  * Reads all 16 pins (port A and B) into a single 16 bits variable.
  */
