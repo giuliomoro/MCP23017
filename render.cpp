@@ -19,10 +19,27 @@ void makeBinaryString(char* str, uint16_t data)
 
 void processEnc()
 {
+	// we set up interrupts but don't actually use the interrupt pins.
+	mcp.setupInterrupts(true, false, MCP23017::HIGH);
+	mcp.setupInterruptPin(0, MCP23017::CHANGE);
+	mcp.setupInterruptPin(1, MCP23017::CHANGE);
 	while(1)
 	{
-		gpio = mcp.readGPIOAB();
+		// we always read from INTCAP (the state of the GPIO when the
+		// interrupt was triggered). This resets the interrupt and
+		// allows us to see which pin toggled first (useful for encoders!)
+		static uint16_t oldGpio;
+		gpio = mcp.readINTCAP(0);
 		encoder.process(gpio & (1 << pins[0]), gpio & (1 << pins[1]));
+		if(oldGpio != gpio)
+		{
+			// we caught the device as an interrupt had just occurred.
+			// add a little "debouncing" delay before reading again
+			usleep(500);
+			// read and ignore in order to clear any interrupt that
+			// may have come up in the meantime.
+			mcp.readINTCAP(0);
+		}
 	}
 }
 // Input #0 is on pin 21 so connect a button or switch from there to ground
@@ -33,10 +50,11 @@ int main() {
 		fprintf(stderr, "Failed to open device\n");
 		return -1;
 	}
-	mcp.pinMode(0, MCP23017::INPUT);
-	mcp.pullUp(0, MCP23017::HIGH);  // turn on a 100K pullup internally
 	for(unsigned int n = 0; n < 16; ++n)
+	{
 		mcp.pinMode(n, MCP23017::INPUT);
+		mcp.pullUp(n, MCP23017::HIGH);  // turn on a 100K pullup internally
+	}
 	int ss = 100;
 	char stars[ss + 1];
 	for(unsigned int n = 0; n < ss; ++n)
@@ -57,7 +75,7 @@ int main() {
 				numStars = ss;
 			else if (numStars < 0)
 				numStars = 0;
-			printf("%s: %d %d %.*s\n", str, rot, numStars, numStars, stars);
+			printf("%s: %d %.*s\n", str, rot, numStars, stars);
 		}
 		oldRot = rot;
 		oldGpio = gpio;
