@@ -261,6 +261,27 @@ uint8_t MCP23017::writeByte(uint8_t writeValue)
 }
 
 /**
+ * INTCAPA and INTCAPB capture the state of PORT A and PORT B at the moment an interrupt occured.
+ * Reading this will also clear the corresponding interrupt.
+ * Reads values from the specified register.
+ */
+uint8_t MCP23017::readINTCAP(uint8_t b){
+	if(0 == b)
+		return readRegister(MCP23017_INTCAPA);
+	else
+		return readRegister(MCP23017_INTCAPB);
+}
+
+/**
+ * See readINTCAP(). This reads values from both registers.
+ */
+uint16_t MCP23017::readINTCAPAB(){
+	uint16_t cap = readINTCAP(0);
+	cap |=  readINTCAP(1) << 8;
+	return cap;
+}
+
+/**
  * Helper to update a single bit of an A/B register.
  * - Reads the current register value
  * - Writes the new register value

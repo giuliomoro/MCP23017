@@ -43,6 +43,8 @@ public:
     void setupInterruptPin(uint8_t p, InterruptMode mode);
     uint8_t getLastInterruptPin();
     uint8_t getLastInterruptPinValue();
+    uint8_t readINTCAP(uint8_t b);
+    uint16_t readINTCAPAB();
 
 private:
     uint8_t bitForPin(uint8_t pin);
