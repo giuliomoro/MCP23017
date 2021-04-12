@@ -9,10 +9,10 @@
 
 std::vector<Encoder> encoders;
 std::vector<std::array<uint8_t, 2>> pinsPairs = {
-	{{0, 1}},
-	{{2, 3}},
-	{{4, 5}},
-	{{6, 7}},
+	{{6, 5}},
+	{{3, 2}},
+	{{9, 10}},
+	{{12, 13}},
 };
 
 uint16_t gpio;
