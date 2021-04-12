@@ -37,7 +37,7 @@ void processEnc()
 		// interrupt was triggered). This resets the interrupt and
 		// allows us to see which pin toggled first (useful for encoders!)
 		static uint16_t oldGpio;
-		gpio = mcp.readINTCAP(0);
+		gpio = mcp.readINTCAPAB();
 		for(unsigned int n = 0; n < pinsPairs.size(); ++n)
 		{
 			auto& pins = pinsPairs[n];
