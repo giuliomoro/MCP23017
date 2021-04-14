@@ -98,14 +98,17 @@ bool MCP23017::openI2C()
        return false ;
     }
     if (ioctl(kI2CFileDescriptor, I2C_SLAVE, kI2CAddress) < 0) {
+
         // Could not open the device on the bus
         error = errno ;
         return false ;
     }
     // set defaults!
-	// all inputs on port A and B
-	writeRegister(MCP23017_IODIRA,0b11111110);
-	writeRegister(MCP23017_IODIRB,0b11111110);
+    // all inputs on port A and B
+    if(writeRegister(MCP23017_IODIRA,0b11111110))
+        return false;
+    if(writeRegister(MCP23017_IODIRB,0b11111110))
+        return false;
     return true ;
 }
 
